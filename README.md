@@ -1,76 +1,34 @@
-# LocoMobileExport
-An exporter script for Localise.biz projects for iOS and Android projects
+A localization export utility for mobile projects supporting iOS and Android platforms.
 
-## What is LocoMobileExport
+**Platform Support:**
+- iOS via CocoaPods integration
+- Android via Gradle task and shell script
 
-```TODO```
+**Installation:**
 
-## How to use it?
-
-### iOS via CocoaPods
-
-Add this to your Podfile, then run ```pod install```
-
-```pod 'LocoMobileExport'```
-
-To integrate automatic update the .strings files when you build the project everytime, please follow below
- steps:
-
-1. Go to `YOUR TARGET` -> `Build Settings`, add an `User Defined Settings`
-2. Set key to `LOCO_API_KEY` and paste in the API Key value from your Localise.biz project.
-3. Navigate to `Build Phases`, add a run script.
-
-```bash
-SCRIPT=$PODS_ROOT/LocoMobileExport/Sources/auto_export.sh
-
-#Need to config the options, see below
-$SCRIPT ios --key $LOCO_API_KEY --map 'en=en' --map 'zh=zh-Hant' --output "$PROJECT_DIR/{path_to_lproj_dir}}"
+**iOS (CocoaPods):**
+Add to Podfile:
+```ruby
+pod 'LocalizeMobileExporter'
 ```
 
-4. Build the project and see the magic!
+**Configuration:**
+1. Set LOCO_API_KEY in build settings
+2. Add run script phase referencing auto_export.sh
+3. Configure language mapping options
 
+**Android:**
+1. Download and extract utility to project
+2. Create executable shell script
+3. Configure Gradle task for pre-build execution
 
-### Android via Gradle task & Shell script
+**Options:**
+- `--key` - Project API key from localization service
+- `--output` - Output directory path for localization files
+- `--map` - Language code mapping (platform-specific)
+- `--tags` - Comma-separated resource tags
+- `--plurals` - Enable plural resource export
+- `--name` - Strings file name (default: localizable)
 
-1. Download the latest release, unzip it to your project root or anywhere you prefer.
-2. Create a bash script in your project root, e.g. `updateLoco.sh`
-3. Make it executable by `chmod +x updateLoco.sh`
-4. Paste script and modify it to match your project
-
-```bash
-KEY=YOUR_API_KEY_HERE  #1)Change this
-SCRIPT=LocoMobileExport/Sources/auto_export.sh #2)..and this
-
-#3)..and the map arguments below
-$SCRIPT android --key $KEY --map "en_HK=values" --output "${PWD}/app/src/main/res"
-```
-
-5. Add these lines in your `Build.gradle`
-
-```gradle
-task locoExport(type: Exec) {
-    doFirst {
-        workingDir rootProject.projectDir
-        commandLine "./updateLoco.sh"
-    }
-}
-//run task before every build
-preBuild.dependsOn(locoExport)
-
-//or you can choose to update loco when you clean the project
-//clean.dependsOn(locoExport) 
-```
-
-
-## Options
-
-Option | Explanation
-------- | -------
-{Platform} | `ios` or `android`
---key | Provide the project API Key from localise.biz
---output | Specific the path of where the `.lproj` folder is e.g. `--output "$PROJECT_DIR/MyApp"`
---map (iOS) | `en_US` on localise.biz exports, `en.lproj` in the xcode project, use `--map 'en_US=en'`, can map as many as you want to meet your project setup.
---map (Android) | `en_US` on localise.biz exports, `values` in the res directory, use `--map 'en_US=values'`, can map as many as you want to meet your project setup.
---tags (optional) | Coma separated Loco tags
---plurals (optional) | `true` if resources should be exported as plural resource file
---name (optional) | The name of the strings file. Default is `localizable`
+**Usage:**
+Configure automatic localization file updates during build process for both iOS and Android projects. Supports custom file naming for strings files.
